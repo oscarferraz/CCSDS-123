@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#usage
+#./run_all
+
+./run casi
+./run hawaii
+./run yellowstone
+./run crism10
+./run crism09
+

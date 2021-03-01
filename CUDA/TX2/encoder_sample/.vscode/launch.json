@@ -1,0 +1,50 @@
+
+
+  {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        // Linux
+        "name": "(gdb) Launch",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/home/nvidia/Desktop/ccsds123_oscar/CUDA/encoder_oscar/UnixMakefile/compressor",
+        "args": [
+            "--input ../../aviris_hawaii_f011020t01p03r05_sc01.uncal-u16be-224x512x614.raw",
+            "--output compressed.fl",
+            "--rows 614",
+            "--columns 512",
+            "--bands 224",
+            "--in_format BI",
+            "--in_depth 224",
+            "--dyn_range 16",
+            "--word_len 1",
+            "--out_format BSQ",
+            "--out_depth 224",
+            "--pred_bands 0",
+            "--reg_size 32",
+            "--w_resolution 4",
+            "--w_interval 2048",
+            "--w_initial -6",
+            "--w_final -6",
+            "--in_byte_ordering BIG",
+            "--block_size 64",
+            "--ref_interval 1"
+    
+        ],
+        "stopAtEntry": false,
+        "cwd": "${workspaceRoot}",
+        "environment": [],
+        "externalConsole": true,
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          }
+        ]
+      },
+    ]
+  }

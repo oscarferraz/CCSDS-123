@@ -1,0 +1,1262 @@
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -o compressor_main.o -c ../compressor_main.c -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    --default-stream per-thread -Xptxas -v --resource-usage --maxrregcount=32 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o entropy_encoder.o -c ../entropy_encoder.cu -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'GPU_compute_sample' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_sample
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 32 registers, 360 bytes cmem[0], 32 bytes cmem[2]
+ptxas info    : Compiling entry function 'GPU_compute_k_split_enc' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_k_split_enc
+    160 bytes stack frame, 160 bytes spill stores, 160 bytes spill loads
+ptxas info    : Used 32 registers, 344 bytes cmem[0]
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53    -o predictor.o -c ../predictor.c -DNO_COMPUTE_LOCAL -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o utils.o -c ../utils.c -DNO_COMPUTE_LOCAL#-DNO_COMPUTE_LOCAL
+<command-line>:0:17: warning: ISO C99 requires whitespace after the macro name
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    --default-stream per-thread -Xptxas -v --resource-usage --maxrregcount=32 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o predictor_cuda.o -c ../predictor_cuda.cu -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+../predictor_cuda.cu(19326): warning: variable "streamBytes_in" was declared but never referenced
+
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'GPU_compute_k_split' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_k_split
+    344 bytes stack frame, 424 bytes spill stores, 428 bytes spill loads
+ptxas info    : Used 32 registers, 348 bytes cmem[0]
+ptxas info    : Compiling entry function 'GPU_compute_prediction' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_prediction
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, 24576 bytes smem, 340 bytes cmem[0]
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o compressor compressor_main.o entropy_encoder.o predictor.o utils.o predictor_cuda.o -lgomp
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o converter.o -c ../converter.c -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o converter converter.o entropy_encoder.o predictor.o utils.o predictor_cuda.o -lgomp
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o decompressor_main.o -c ../decompressor_main.c -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -DNO_COMPUTE_LOCAL -o unpredict.o -c ../unpredict.c -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -o decoder.o -c ../decoder.c -DNO_COMPUTE_LOCAL
+../decoder.c: In function ‘read_header’:
+../decoder.c:366:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->x_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:367:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->y_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:368:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->z_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:378:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:394:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&encoder_params->out_interleaving_depth, 2, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:400:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:414:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:426:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:436:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:441:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:447:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:493:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:500:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:510:21: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+                     fread(&buffer, 1, 1, compressedStream);
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:525:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:548:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o predictor_nolocal.o -c ../predictor.c -DNO_COMPUTE_LOCAL -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o decompressor decompressor_main.o utils.o unpredict.o decoder.o predictor_nolocal.o predictor_cuda.o -lgomp 
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o check.o -c ../check.c -DNO_COMPUTE_LOCAL#-DNO_COMPUTE_LOCAL
+<command-line>:0:17: warning: ISO C99 requires whitespace after the macro name
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o check check.o -lgomp
+rm -rf *.o 
+./run: 75: [: !=: unexpected operator
+rm: cannot remove 'tempos.txt': No such file or directory
+rm: cannot remove 'tempos_arm.txt': No such file or directory
+rm: cannot remove 'tempos_phase_1_hawaii.txt': No such file or directory
+rm: cannot remove 'tempos_phase_2_hawaii.txt': No such file or directory
+prediction done
+start encoding
+core=56, BITSTREAM=3363.574488
+core=56, BITSTREAM=3364.384427
+core=56, BITSTREAM=3427.468066
+core=56, BITSTREAM=3444.878412
+BITSTREAM=39.703397
+Overall Compression duration 19516.943036 (msec)
+Prediction duration 15412.000986 (msec)
+Encoding duration 4104.942050 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3354.831920
+core=56, BITSTREAM=3371.963266
+core=56, BITSTREAM=3395.247523
+core=56, BITSTREAM=3443.232022
+BITSTREAM=37.602489
+Overall Compression duration 18812.144835 (msec)
+Prediction duration 14844.158855 (msec)
+Encoding duration 3967.985980 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3374.675650
+core=56, BITSTREAM=3381.763203
+core=56, BITSTREAM=3389.731088
+core=56, BITSTREAM=3445.297318
+BITSTREAM=37.781566
+Overall Compression duration 19051.433985 (msec)
+Prediction duration 15081.742263 (msec)
+Encoding duration 3969.691722 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3342.985936
+core=56, BITSTREAM=3372.903557
+core=56, BITSTREAM=3377.023936
+core=56, BITSTREAM=3434.112612
+BITSTREAM=37.641175
+Overall Compression duration 19066.278862 (msec)
+Prediction duration 15107.159884 (msec)
+Encoding duration 3959.118978 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3357.011188
+core=56, BITSTREAM=3364.297949
+core=56, BITSTREAM=3365.869948
+core=56, BITSTREAM=3451.282568
+BITSTREAM=38.052263
+Overall Compression duration 18863.689825 (msec)
+Prediction duration 14875.345149 (msec)
+Encoding duration 3988.344676 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3360.082384
+core=56, BITSTREAM=3369.312435
+core=56, BITSTREAM=3375.617922
+core=56, BITSTREAM=3432.308450
+BITSTREAM=37.593597
+Overall Compression duration 19044.063957 (msec)
+Prediction duration 15086.663640 (msec)
+Encoding duration 3957.400317 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3363.995627
+core=56, BITSTREAM=3373.844583
+core=56, BITSTREAM=3401.313822
+core=56, BITSTREAM=3406.900754
+BITSTREAM=37.798095
+Overall Compression duration 18689.239763 (msec)
+Prediction duration 14750.059932 (msec)
+Encoding duration 3939.179831 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3343.753017
+core=56, BITSTREAM=3375.139624
+core=56, BITSTREAM=3405.190176
+core=56, BITSTREAM=3406.470814
+BITSTREAM=38.163235
+Overall Compression duration 18572.082032 (msec)
+Prediction duration 14639.778015 (msec)
+Encoding duration 3932.304017 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3353.443537
+core=56, BITSTREAM=3378.349605
+core=56, BITSTREAM=3407.606235
+core=56, BITSTREAM=3440.602119
+BITSTREAM=37.740512
+Overall Compression duration 19144.840043 (msec)
+Prediction duration 15164.213294 (msec)
+Encoding duration 3980.626749 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3348.089285
+core=56, BITSTREAM=3366.621488
+core=56, BITSTREAM=3366.866438
+core=56, BITSTREAM=3394.490704
+BITSTREAM=37.753943
+Overall Compression duration 18665.220402 (msec)
+Prediction duration 14751.420036 (msec)
+Encoding duration 3913.800366 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3351.760995
+core=56, BITSTREAM=3357.235472
+core=56, BITSTREAM=3374.545735
+core=56, BITSTREAM=3388.141068
+BITSTREAM=37.724461
+Overall Compression duration 18583.449402 (msec)
+Prediction duration 14676.454973 (msec)
+Encoding duration 3906.994429 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3346.843436
+core=56, BITSTREAM=3355.498827
+core=56, BITSTREAM=3368.181235
+core=56, BITSTREAM=3390.431177
+BITSTREAM=37.704876
+Overall Compression duration 18965.773002 (msec)
+Prediction duration 15053.989458 (msec)
+Encoding duration 3911.783544 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3339.714634
+core=56, BITSTREAM=3353.395227
+core=56, BITSTREAM=3356.728434
+core=56, BITSTREAM=3390.718640
+BITSTREAM=37.837584
+Overall Compression duration 18724.961643 (msec)
+Prediction duration 14799.752615 (msec)
+Encoding duration 3925.209028 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3358.042197
+core=56, BITSTREAM=3358.463347
+core=56, BITSTREAM=3373.806819
+core=56, BITSTREAM=3535.562821
+BITSTREAM=37.493883
+Overall Compression duration 19118.602721 (msec)
+Prediction duration 15063.216320 (msec)
+Encoding duration 4055.386401 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3348.562708
+core=56, BITSTREAM=3357.820292
+core=56, BITSTREAM=3371.341456
+core=56, BITSTREAM=3382.241087
+BITSTREAM=37.593727
+Overall Compression duration 18527.168599 (msec)
+Prediction duration 14625.365554 (msec)
+Encoding duration 3901.803045 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3341.793672
+core=56, BITSTREAM=3349.323428
+core=56, BITSTREAM=3371.898997
+core=56, BITSTREAM=3380.368710
+BITSTREAM=37.522007
+Overall Compression duration 18522.779547 (msec)
+Prediction duration 14621.330377 (msec)
+Encoding duration 3901.449170 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3347.354598
+core=56, BITSTREAM=3352.013339
+core=56, BITSTREAM=3359.570543
+core=56, BITSTREAM=3392.774594
+BITSTREAM=37.647633
+Overall Compression duration 19059.255449 (msec)
+Prediction duration 15129.178583 (msec)
+Encoding duration 3930.076866 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3353.436369
+core=56, BITSTREAM=3369.480994
+core=56, BITSTREAM=3370.060791
+core=56, BITSTREAM=3398.587769
+BITSTREAM=38.346025
+Overall Compression duration 18654.923204 (msec)
+Prediction duration 14737.092078 (msec)
+Encoding duration 3917.831126 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3351.868694
+core=56, BITSTREAM=3361.258675
+core=56, BITSTREAM=3363.778750
+core=56, BITSTREAM=3385.856138
+BITSTREAM=37.582112
+Overall Compression duration 18634.643100 (msec)
+Prediction duration 14732.223213 (msec)
+Encoding duration 3902.419887 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3348.539600
+core=56, BITSTREAM=3352.419166
+core=56, BITSTREAM=3368.259466
+core=56, BITSTREAM=3395.225961
+BITSTREAM=37.599872
+Overall Compression duration 18537.396734 (msec)
+Prediction duration 14620.730417 (msec)
+Encoding duration 3916.666317 (msec)
+7434305 bytes (7260.06 kb) in the compressed image
+Compressed rate 0.844586 bits/sample
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -o compressor_main.o -c ../compressor_main.c -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    --default-stream per-thread -Xptxas -v --resource-usage --maxrregcount=32 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o entropy_encoder.o -c ../entropy_encoder.cu -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'GPU_compute_sample' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_sample
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 32 registers, 360 bytes cmem[0], 32 bytes cmem[2]
+ptxas info    : Compiling entry function 'GPU_compute_k_split_enc' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_k_split_enc
+    160 bytes stack frame, 160 bytes spill stores, 160 bytes spill loads
+ptxas info    : Used 32 registers, 344 bytes cmem[0]
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53    -o predictor.o -c ../predictor.c -DNO_COMPUTE_LOCAL -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o utils.o -c ../utils.c -DNO_COMPUTE_LOCAL#-DNO_COMPUTE_LOCAL
+<command-line>:0:17: warning: ISO C99 requires whitespace after the macro name
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    --default-stream per-thread -Xptxas -v --resource-usage --maxrregcount=32 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o predictor_cuda.o -c ../predictor_cuda.cu -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+../predictor_cuda.cu(19326): warning: variable "streamBytes_in" was declared but never referenced
+
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'GPU_compute_k_split' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_k_split
+    344 bytes stack frame, 424 bytes spill stores, 428 bytes spill loads
+ptxas info    : Used 32 registers, 348 bytes cmem[0]
+ptxas info    : Compiling entry function 'GPU_compute_prediction' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_prediction
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, 24576 bytes smem, 340 bytes cmem[0]
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o compressor compressor_main.o entropy_encoder.o predictor.o utils.o predictor_cuda.o -lgomp
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o converter.o -c ../converter.c -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o converter converter.o entropy_encoder.o predictor.o utils.o predictor_cuda.o -lgomp
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o decompressor_main.o -c ../decompressor_main.c -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -DNO_COMPUTE_LOCAL -o unpredict.o -c ../unpredict.c -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -o decoder.o -c ../decoder.c -DNO_COMPUTE_LOCAL
+../decoder.c: In function ‘read_header’:
+../decoder.c:366:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->x_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:367:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->y_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:368:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->z_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:378:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:394:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&encoder_params->out_interleaving_depth, 2, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:400:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:414:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:426:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:436:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:441:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:447:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:493:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:500:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:510:21: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+                     fread(&buffer, 1, 1, compressedStream);
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:525:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:548:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o predictor_nolocal.o -c ../predictor.c -DNO_COMPUTE_LOCAL -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o decompressor decompressor_main.o utils.o unpredict.o decoder.o predictor_nolocal.o predictor_cuda.o -lgomp 
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o check.o -c ../check.c -DNO_COMPUTE_LOCAL#-DNO_COMPUTE_LOCAL
+<command-line>:0:17: warning: ISO C99 requires whitespace after the macro name
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o check check.o -lgomp
+rm -rf *.o 
+./run: 75: [: !=: unexpected operator
+rm: cannot remove 'tempos.txt': No such file or directory
+rm: cannot remove 'tempos_arm.txt': No such file or directory
+rm: cannot remove 'tempos_phase_1_yellowstone.txt': No such file or directory
+rm: cannot remove 'tempos_phase_2_yellowstone.txt': No such file or directory
+prediction done
+start encoding
+core=56, BITSTREAM=3730.378792
+core=56, BITSTREAM=3751.362368
+core=56, BITSTREAM=3784.292927
+core=56, BITSTREAM=3815.426595
+BITSTREAM=74.338174
+Overall Compression duration 22207.194603 (msec)
+Prediction duration 17413.484758 (msec)
+Encoding duration 4793.709845 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3749.018336
+core=56, BITSTREAM=3754.243748
+core=56, BITSTREAM=3774.994769
+core=56, BITSTREAM=3799.041810
+BITSTREAM=73.610408
+Overall Compression duration 21305.694339 (msec)
+Prediction duration 16667.298663 (msec)
+Encoding duration 4638.395676 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3757.252160
+core=56, BITSTREAM=3767.696786
+core=56, BITSTREAM=3780.287213
+core=56, BITSTREAM=3793.193111
+BITSTREAM=73.246706
+Overall Compression duration 21653.325148 (msec)
+Prediction duration 17058.174500 (msec)
+Encoding duration 4595.150648 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3756.285693
+core=56, BITSTREAM=3772.075316
+core=56, BITSTREAM=3783.542347
+core=56, BITSTREAM=3794.764740
+BITSTREAM=73.055194
+Overall Compression duration 21299.099538 (msec)
+Prediction duration 16713.139130 (msec)
+Encoding duration 4585.960408 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3761.822046
+core=56, BITSTREAM=3764.237693
+core=56, BITSTREAM=3774.303305
+core=56, BITSTREAM=3813.247929
+BITSTREAM=73.121497
+Overall Compression duration 21728.630414 (msec)
+Prediction duration 17107.124527 (msec)
+Encoding duration 4621.505887 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3757.658518
+core=56, BITSTREAM=3762.626532
+core=56, BITSTREAM=3766.426150
+core=56, BITSTREAM=3797.033928
+BITSTREAM=73.089361
+Overall Compression duration 21339.467508 (msec)
+Prediction duration 16728.870991 (msec)
+Encoding duration 4610.596517 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3767.456419
+core=56, BITSTREAM=3769.144820
+core=56, BITSTREAM=3771.506196
+core=56, BITSTREAM=3810.928012
+BITSTREAM=73.203476
+Overall Compression duration 21327.786464 (msec)
+Prediction duration 16715.730403 (msec)
+Encoding duration 4612.056061 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3746.853056
+core=56, BITSTREAM=3763.297788
+core=56, BITSTREAM=3797.320961
+core=56, BITSTREAM=3807.762046
+BITSTREAM=73.143268
+Overall Compression duration 21308.588998 (msec)
+Prediction duration 16704.116183 (msec)
+Encoding duration 4604.472815 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3757.173149
+core=56, BITSTREAM=3762.606428
+core=56, BITSTREAM=3769.704877
+core=56, BITSTREAM=3802.372517
+BITSTREAM=73.121289
+Overall Compression duration 21283.106111 (msec)
+Prediction duration 16676.556714 (msec)
+Encoding duration 4606.549397 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3749.922875
+core=56, BITSTREAM=3757.850395
+core=56, BITSTREAM=3774.595807
+core=56, BITSTREAM=3786.353831
+BITSTREAM=73.135247
+Overall Compression duration 21374.918455 (msec)
+Prediction duration 16784.138159 (msec)
+Encoding duration 4590.780296 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3764.122170
+core=56, BITSTREAM=3769.926754
+core=56, BITSTREAM=3775.387533
+core=56, BITSTREAM=3801.917461
+BITSTREAM=73.226186
+Overall Compression duration 21309.169264 (msec)
+Prediction duration 16713.918407 (msec)
+Encoding duration 4595.250857 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3751.180074
+core=56, BITSTREAM=3765.320411
+core=56, BITSTREAM=3781.520089
+core=56, BITSTREAM=3806.234220
+BITSTREAM=73.144361
+Overall Compression duration 21622.099551 (msec)
+Prediction duration 17026.107698 (msec)
+Encoding duration 4595.991853 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3747.311185
+core=56, BITSTREAM=3763.546905
+core=56, BITSTREAM=3775.490503
+core=56, BITSTREAM=3801.166256
+BITSTREAM=73.351915
+Overall Compression duration 21712.364797 (msec)
+Prediction duration 17101.976355 (msec)
+Encoding duration 4610.388442 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3765.647237
+core=56, BITSTREAM=3769.607012
+core=56, BITSTREAM=3773.050429
+core=56, BITSTREAM=3794.742136
+BITSTREAM=73.184414
+Overall Compression duration 21306.918827 (msec)
+Prediction duration 16722.005772 (msec)
+Encoding duration 4584.913055 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3760.205781
+core=56, BITSTREAM=3768.936589
+core=56, BITSTREAM=3769.230030
+core=56, BITSTREAM=3819.417829
+BITSTREAM=73.139882
+Overall Compression duration 21383.728014 (msec)
+Prediction duration 16781.317926 (msec)
+Encoding duration 4602.410088 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3747.095037
+core=56, BITSTREAM=3769.536126
+core=56, BITSTREAM=3781.492277
+core=56, BITSTREAM=3798.359357
+BITSTREAM=73.796242
+Overall Compression duration 21639.586012 (msec)
+Prediction duration 17051.778556 (msec)
+Encoding duration 4587.807456 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3753.187957
+core=56, BITSTREAM=3757.174296
+core=56, BITSTREAM=3767.008239
+core=56, BITSTREAM=3808.249342
+BITSTREAM=73.524000
+Overall Compression duration 21390.421147 (msec)
+Prediction duration 16772.077268 (msec)
+Encoding duration 4618.343879 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3753.125664
+core=56, BITSTREAM=3768.664972
+core=56, BITSTREAM=3796.846530
+core=56, BITSTREAM=3798.409877
+BITSTREAM=73.477021
+Overall Compression duration 21815.852768 (msec)
+Prediction duration 17225.433777 (msec)
+Encoding duration 4590.418991 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3764.965460
+core=56, BITSTREAM=3768.872735
+core=56, BITSTREAM=3771.880314
+core=56, BITSTREAM=3801.178340
+BITSTREAM=73.010715
+Overall Compression duration 21640.723627 (msec)
+Prediction duration 17053.245497 (msec)
+Encoding duration 4587.478130 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+prediction done
+start encoding
+core=56, BITSTREAM=3746.877900
+core=56, BITSTREAM=3761.065685
+core=56, BITSTREAM=3786.187423
+core=56, BITSTREAM=3795.455685
+BITSTREAM=73.358739
+Overall Compression duration 21640.955400 (msec)
+Prediction duration 17067.667294 (msec)
+Encoding duration 4573.288106 (msec)
+14564046 bytes (14222.70 kb) in the compressed image
+Compressed rate 1.493981 bits/sample
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -o compressor_main.o -c ../compressor_main.c -DNO_COMPUTE_LOCAL -DCRISM #-DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    --default-stream per-thread -Xptxas -v --resource-usage --maxrregcount=32 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o entropy_encoder.o -c ../entropy_encoder.cu -DNO_COMPUTE_LOCAL -DCRISM #-DNO_COMPUTE_LOCAL
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'GPU_compute_sample' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_sample
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 32 registers, 360 bytes cmem[0], 32 bytes cmem[2]
+ptxas info    : Compiling entry function 'GPU_compute_k_split_enc' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_k_split_enc
+    160 bytes stack frame, 160 bytes spill stores, 160 bytes spill loads
+ptxas info    : Used 32 registers, 344 bytes cmem[0]
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53    -o predictor.o -c ../predictor.c -DNO_COMPUTE_LOCAL -DNO_COMPUTE_LOCAL -DCRISM
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o utils.o -c ../utils.c -DNO_COMPUTE_LOCAL -DCRISM#-DNO_COMPUTE_LOCAL
+<command-line>:0:6: warning: ISO C99 requires whitespace after the macro name
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    --default-stream per-thread -Xptxas -v --resource-usage --maxrregcount=32 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o predictor_cuda.o -c ../predictor_cuda.cu -DNO_COMPUTE_LOCAL -DCRISM #-DNO_COMPUTE_LOCAL
+../predictor_cuda.cu(19326): warning: variable "streamBytes_in" was declared but never referenced
+
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'GPU_compute_k_split' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_k_split
+    344 bytes stack frame, 424 bytes spill stores, 428 bytes spill loads
+ptxas info    : Used 32 registers, 348 bytes cmem[0]
+ptxas info    : Compiling entry function 'GPU_compute_prediction' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_prediction
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, 24576 bytes smem, 340 bytes cmem[0]
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o compressor compressor_main.o entropy_encoder.o predictor.o utils.o predictor_cuda.o -lgomp
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o converter.o -c ../converter.c -DNO_COMPUTE_LOCAL -DCRISM #-DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o converter converter.o entropy_encoder.o predictor.o utils.o predictor_cuda.o -lgomp
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o decompressor_main.o -c ../decompressor_main.c -DNO_COMPUTE_LOCAL -DCRISM
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -DNO_COMPUTE_LOCAL -o unpredict.o -c ../unpredict.c -DNO_COMPUTE_LOCAL -DCRISM
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -o decoder.o -c ../decoder.c -DNO_COMPUTE_LOCAL -DCRISM
+../decoder.c: In function ‘read_header’:
+../decoder.c:366:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->x_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:367:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->y_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:368:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->z_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:378:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:394:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&encoder_params->out_interleaving_depth, 2, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:400:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:414:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:426:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:436:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:441:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:447:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:493:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:500:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:510:21: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+                     fread(&buffer, 1, 1, compressedStream);
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:525:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:548:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o predictor_nolocal.o -c ../predictor.c -DNO_COMPUTE_LOCAL -DNO_COMPUTE_LOCAL -DCRISM
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o decompressor decompressor_main.o utils.o unpredict.o decoder.o predictor_nolocal.o predictor_cuda.o -lgomp 
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o check.o -c ../check.c -DNO_COMPUTE_LOCAL -DCRISM#-DNO_COMPUTE_LOCAL
+<command-line>:0:6: warning: ISO C99 requires whitespace after the macro name
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o check check.o -lgomp
+rm -rf *.o 
+./run: 75: [: !=: unexpected operator
+rm: cannot remove 'tempos.txt': No such file or directory
+rm: cannot remove 'tempos_arm.txt': No such file or directory
+rm: cannot remove 'tempos_phase_1_crism10.txt': No such file or directory
+rm: cannot remove 'tempos_phase_2_crism10.txt': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+mv: cannot stat 'tempos.txt': No such file or directory
+mv: cannot stat 'tempos_arm.txt': No such file or directory
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -o compressor_main.o -c ../compressor_main.c -DNO_COMPUTE_LOCAL -DCRISM #-DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    --default-stream per-thread -Xptxas -v --resource-usage --maxrregcount=32 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o entropy_encoder.o -c ../entropy_encoder.cu -DNO_COMPUTE_LOCAL -DCRISM #-DNO_COMPUTE_LOCAL
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'GPU_compute_sample' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_sample
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 32 registers, 360 bytes cmem[0], 32 bytes cmem[2]
+ptxas info    : Compiling entry function 'GPU_compute_k_split_enc' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_k_split_enc
+    160 bytes stack frame, 160 bytes spill stores, 160 bytes spill loads
+ptxas info    : Used 32 registers, 344 bytes cmem[0]
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53    -o predictor.o -c ../predictor.c -DNO_COMPUTE_LOCAL -DNO_COMPUTE_LOCAL -DCRISM
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o utils.o -c ../utils.c -DNO_COMPUTE_LOCAL -DCRISM#-DNO_COMPUTE_LOCAL
+<command-line>:0:6: warning: ISO C99 requires whitespace after the macro name
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    --default-stream per-thread -Xptxas -v --resource-usage --maxrregcount=32 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o predictor_cuda.o -c ../predictor_cuda.cu -DNO_COMPUTE_LOCAL -DCRISM #-DNO_COMPUTE_LOCAL
+../predictor_cuda.cu(19326): warning: variable "streamBytes_in" was declared but never referenced
+
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'GPU_compute_k_split' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_k_split
+    344 bytes stack frame, 424 bytes spill stores, 428 bytes spill loads
+ptxas info    : Used 32 registers, 348 bytes cmem[0]
+ptxas info    : Compiling entry function 'GPU_compute_prediction' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_prediction
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, 24576 bytes smem, 340 bytes cmem[0]
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o compressor compressor_main.o entropy_encoder.o predictor.o utils.o predictor_cuda.o -lgomp
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o converter.o -c ../converter.c -DNO_COMPUTE_LOCAL -DCRISM #-DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o converter converter.o entropy_encoder.o predictor.o utils.o predictor_cuda.o -lgomp
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o decompressor_main.o -c ../decompressor_main.c -DNO_COMPUTE_LOCAL -DCRISM
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -DNO_COMPUTE_LOCAL -o unpredict.o -c ../unpredict.c -DNO_COMPUTE_LOCAL -DCRISM
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -o decoder.o -c ../decoder.c -DNO_COMPUTE_LOCAL -DCRISM
+../decoder.c: In function ‘read_header’:
+../decoder.c:366:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->x_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:367:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->y_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:368:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->z_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:378:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:394:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&encoder_params->out_interleaving_depth, 2, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:400:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:414:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:426:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:436:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:441:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:447:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:493:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:500:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:510:21: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+                     fread(&buffer, 1, 1, compressedStream);
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:525:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:548:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o predictor_nolocal.o -c ../predictor.c -DNO_COMPUTE_LOCAL -DNO_COMPUTE_LOCAL -DCRISM
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o decompressor decompressor_main.o utils.o unpredict.o decoder.o predictor_nolocal.o predictor_cuda.o -lgomp 
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o check.o -c ../check.c -DNO_COMPUTE_LOCAL -DCRISM#-DNO_COMPUTE_LOCAL
+<command-line>:0:6: warning: ISO C99 requires whitespace after the macro name
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o check check.o -lgomp
+rm -rf *.o 
+./run: 75: [: !=: unexpected operator
+rm: cannot remove 'tempos.txt': No such file or directory
+rm: cannot remove 'tempos_arm.txt': No such file or directory
+rm: cannot remove 'tempos_phase_1_crism09.txt': No such file or directory
+rm: cannot remove 'tempos_phase_2_crism09.txt': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+Killed
+rm: cannot remove 'compressed.fl': No such file or directory
+mv: cannot stat 'tempos.txt': No such file or directory
+mv: cannot stat 'tempos_arm.txt': No such file or directory
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -o compressor_main.o -c ../compressor_main.c -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    --default-stream per-thread -Xptxas -v --resource-usage --maxrregcount=32 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o entropy_encoder.o -c ../entropy_encoder.cu -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'GPU_compute_sample' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_sample
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 32 registers, 360 bytes cmem[0], 32 bytes cmem[2]
+ptxas info    : Compiling entry function 'GPU_compute_k_split_enc' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_k_split_enc
+    160 bytes stack frame, 160 bytes spill stores, 160 bytes spill loads
+ptxas info    : Used 32 registers, 344 bytes cmem[0]
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53    -o predictor.o -c ../predictor.c -DNO_COMPUTE_LOCAL -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o utils.o -c ../utils.c -DNO_COMPUTE_LOCAL#-DNO_COMPUTE_LOCAL
+<command-line>:0:17: warning: ISO C99 requires whitespace after the macro name
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    --default-stream per-thread -Xptxas -v --resource-usage --maxrregcount=32 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o predictor_cuda.o -c ../predictor_cuda.cu -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+../predictor_cuda.cu(19326): warning: variable "streamBytes_in" was declared but never referenced
+
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'GPU_compute_k_split' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_k_split
+    344 bytes stack frame, 424 bytes spill stores, 428 bytes spill loads
+ptxas info    : Used 32 registers, 348 bytes cmem[0]
+ptxas info    : Compiling entry function 'GPU_compute_prediction' for 'sm_53'
+ptxas info    : Function properties for GPU_compute_prediction
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, 24576 bytes smem, 340 bytes cmem[0]
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o compressor compressor_main.o entropy_encoder.o predictor.o utils.o predictor_cuda.o -lgomp
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o converter.o -c ../converter.c -DNO_COMPUTE_LOCAL #-DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o converter converter.o entropy_encoder.o predictor.o utils.o predictor_cuda.o -lgomp
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o decompressor_main.o -c ../decompressor_main.c -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -DNO_COMPUTE_LOCAL -o unpredict.o -c ../unpredict.c -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53  -o decoder.o -c ../decoder.c -DNO_COMPUTE_LOCAL
+../decoder.c: In function ‘read_header’:
+../decoder.c:366:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->x_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:367:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->y_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:368:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&input_params->z_size, 2, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:378:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:394:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&encoder_params->out_interleaving_depth, 2, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:400:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:414:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:426:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:436:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:441:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:447:5: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+     fread(&buffer, 1, 1, compressedStream);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:493:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:500:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:510:21: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+                     fread(&buffer, 1, 1, compressedStream);
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:525:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../decoder.c:548:9: warning: ignoring return value of ‘fread’, declared with attribute warn_unused_result [-Wunused-result]
+         fread(&buffer, 1, 1, compressedStream);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53   -o predictor_nolocal.o -c ../predictor.c -DNO_COMPUTE_LOCAL -DNO_COMPUTE_LOCAL
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o decompressor decompressor_main.o utils.o unpredict.o decoder.o predictor_nolocal.o predictor_cuda.o -lgomp 
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++ -I /usr/local/cuda-10.2/samples/common/inc/  -O3    -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o check.o -c ../check.c -DNO_COMPUTE_LOCAL#-DNO_COMPUTE_LOCAL
+<command-line>:0:17: warning: ISO C99 requires whitespace after the macro name
+/usr/local/cuda-10.2/bin/nvcc -ccbin g++   -O3      -gencode arch=compute_53,code=sm_53 -gencode arch=compute_53,code=compute_53 -o check check.o -lgomp
+rm -rf *.o 
+./run: 75: [: !=: unexpected operator
+rm: cannot remove 'tempos.txt': No such file or directory
+rm: cannot remove 'tempos_arm.txt': No such file or directory
+prediction done
+start encoding
+core=18, BITSTREAM=1701.606626
+core=18, BITSTREAM=1708.841481
+core=18, BITSTREAM=1714.140926
+core=18, BITSTREAM=1714.860631
+BITSTREAM=27.280110
+Overall Compression duration 9750.618973 (msec)
+Prediction duration 7790.587667 (msec)
+Encoding duration 1960.031306 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1705.593640
+core=18, BITSTREAM=1706.140268
+core=18, BITSTREAM=1711.461901
+core=18, BITSTREAM=1713.368455
+BITSTREAM=27.526468
+Overall Compression duration 9584.723930 (msec)
+Prediction duration 7620.878964 (msec)
+Encoding duration 1963.844966 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1707.312790
+core=18, BITSTREAM=1707.838584
+core=18, BITSTREAM=1711.990711
+core=18, BITSTREAM=1719.107385
+BITSTREAM=27.395682
+Overall Compression duration 9668.486863 (msec)
+Prediction duration 7703.162456 (msec)
+Encoding duration 1965.324407 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1703.488793
+core=18, BITSTREAM=1704.805594
+core=18, BITSTREAM=1709.397210
+core=18, BITSTREAM=1711.517727
+BITSTREAM=27.618082
+Overall Compression duration 9662.821332 (msec)
+Prediction duration 7705.095452 (msec)
+Encoding duration 1957.725880 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1705.218884
+core=18, BITSTREAM=1708.940375
+core=18, BITSTREAM=1713.035781
+core=18, BITSTREAM=1718.319965
+BITSTREAM=27.654383
+Overall Compression duration 9780.955679 (msec)
+Prediction duration 7815.434013 (msec)
+Encoding duration 1965.521666 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1702.640495
+core=18, BITSTREAM=1707.019241
+core=18, BITSTREAM=1710.272336
+core=18, BITSTREAM=1716.478103
+BITSTREAM=27.392917
+Overall Compression duration 9566.172834 (msec)
+Prediction duration 7603.780419 (msec)
+Encoding duration 1962.392415 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1705.289309
+core=18, BITSTREAM=1706.387511
+core=18, BITSTREAM=1707.359929
+core=18, BITSTREAM=1714.484205
+BITSTREAM=27.463490
+Overall Compression duration 9733.102271 (msec)
+Prediction duration 7770.546166 (msec)
+Encoding duration 1962.556105 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1705.093735
+core=18, BITSTREAM=1707.137584
+core=18, BITSTREAM=1707.557958
+core=18, BITSTREAM=1718.112000
+BITSTREAM=27.060355
+Overall Compression duration 9731.876098 (msec)
+Prediction duration 7767.772885 (msec)
+Encoding duration 1964.103213 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1701.186517
+core=18, BITSTREAM=1713.435285
+core=18, BITSTREAM=1713.528724
+core=18, BITSTREAM=1717.906688
+BITSTREAM=27.379735
+Overall Compression duration 9752.142612 (msec)
+Prediction duration 7786.360879 (msec)
+Encoding duration 1965.781733 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1711.051177
+core=18, BITSTREAM=1711.434102
+core=18, BITSTREAM=1715.130280
+core=18, BITSTREAM=1795.539284
+BITSTREAM=27.116081
+Overall Compression duration 9807.742274 (msec)
+Prediction duration 7766.294672 (msec)
+Encoding duration 2041.447602 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1705.056679
+core=18, BITSTREAM=1705.345956
+core=18, BITSTREAM=1706.653433
+core=18, BITSTREAM=1715.926142
+BITSTREAM=27.384940
+Overall Compression duration 9558.814970 (msec)
+Prediction duration 7595.401997 (msec)
+Encoding duration 1963.412973 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1705.158880
+core=18, BITSTREAM=1707.523256
+core=18, BITSTREAM=1708.232856
+core=18, BITSTREAM=1716.533615
+BITSTREAM=27.343063
+Overall Compression duration 9671.543349 (msec)
+Prediction duration 7708.272777 (msec)
+Encoding duration 1963.270572 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1701.870539
+core=18, BITSTREAM=1707.960988
+core=18, BITSTREAM=1713.548040
+core=18, BITSTREAM=1715.397144
+BITSTREAM=27.635152
+Overall Compression duration 9766.556374 (msec)
+Prediction duration 7802.223018 (msec)
+Encoding duration 1964.333356 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1705.739756
+core=18, BITSTREAM=1705.988303
+core=18, BITSTREAM=1713.219351
+core=18, BITSTREAM=1714.300677
+BITSTREAM=27.559627
+Overall Compression duration 9681.217805 (msec)
+Prediction duration 7711.941262 (msec)
+Encoding duration 1969.276543 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1700.153086
+core=18, BITSTREAM=1705.419037
+core=18, BITSTREAM=1716.739394
+core=18, BITSTREAM=1723.424752
+BITSTREAM=26.991488
+Overall Compression duration 9736.166246 (msec)
+Prediction duration 7767.402472 (msec)
+Encoding duration 1968.763774 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1700.010499
+core=18, BITSTREAM=1705.477964
+core=18, BITSTREAM=1709.405916
+core=18, BITSTREAM=1720.906798
+BITSTREAM=27.113833
+Overall Compression duration 9673.689520 (msec)
+Prediction duration 7706.603329 (msec)
+Encoding duration 1967.086191 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1702.795216
+core=18, BITSTREAM=1710.409761
+core=18, BITSTREAM=1710.908730
+core=18, BITSTREAM=1718.419210
+BITSTREAM=27.205970
+Overall Compression duration 9721.888606 (msec)
+Prediction duration 7756.532185 (msec)
+Encoding duration 1965.356421 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1705.533583
+core=18, BITSTREAM=1705.974582
+core=18, BITSTREAM=1711.882213
+core=18, BITSTREAM=1715.628234
+BITSTREAM=27.507433
+Overall Compression duration 9563.007891 (msec)
+Prediction duration 7601.096275 (msec)
+Encoding duration 1961.911616 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1704.950156
+core=18, BITSTREAM=1708.067985
+core=18, BITSTREAM=1709.294836
+core=18, BITSTREAM=1712.081564
+BITSTREAM=27.329928
+Overall Compression duration 9723.890121 (msec)
+Prediction duration 7762.038755 (msec)
+Encoding duration 1961.851366 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample
+prediction done
+start encoding
+core=18, BITSTREAM=1700.492321
+core=18, BITSTREAM=1705.033463
+core=18, BITSTREAM=1710.119305
+core=18, BITSTREAM=1714.214812
+BITSTREAM=27.320865
+Overall Compression duration 9718.209230 (msec)
+Prediction duration 7758.076795 (msec)
+Encoding duration 1960.132435 (msec)
+5396728 bytes (5270.24 kb) in the compressed image
+Compressed rate 1.205663 bits/sample

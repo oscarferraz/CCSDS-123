@@ -1,0 +1,76 @@
+#/bin/sh
+
+#usage
+#./program_tester <image_file>
+
+################################################################################
+# Help                                                                         #
+################################################################################
+Help()
+{
+    # Display Help
+    echo usage "./program_tester ["hawaii", "yellowstone", "crism10", "crims09", "casi"]"
+}
+
+################################################################################
+# Process the input options. Add options as needed.                            #
+################################################################################
+# Get the options
+while getopts ":h" option; do
+   case $option in
+        h) # display Help
+            Help
+            exit;;
+        \?) # incorrect option
+            echo "Error: Invalid option"
+            exit;;
+   esac
+done
+
+if [ $# -lt 1 ] ; then
+    Help
+    exit
+fi
+
+if [ $1 = "hawaii" ]; then
+    rows="512"
+    columns="614"
+    bands="224"
+    image_path="../../../images/aviris_hawaii_f011020t01p03r05_sc01.uncal-u16be-224x512x614.raw"
+
+    cd .. && make NVCCFLAGS+=-O3 GLOBAL_DEFINES+=-DNO_COMPUTE_LOCAL GLOBAL_DEFINES+=-DAVIRIS
+elif [ $1 = "yellowstone" ]; then
+    rows="512"
+    columns="680"
+    bands="224"
+    image_path="../../../images/aviris_yellowstone_f060925t01p00r12_sc00.uncal-u16be-224x512x680.raw"
+
+    cd .. && make NVCCFLAGS+=-O3 GLOBAL_DEFINES+=-DNO_COMPUTE_LOCAL GLOBAL_DEFINES+=-DAVIRIS
+elif [ $1 = "crism10" ]; then
+    rows="510"
+    columns="640"
+    bands="545"
+    image_path="../../../images/crism_frt00010f86_07_sc167-u16be-545x510x640.raw"
+
+    cd .. && make NVCCFLAGS+=-O3 GLOBAL_DEFINES+=-DNO_COMPUTE_LOCAL 
+elif [ $1 = "crism09" ]; then
+    rows="510"
+    columns="640"
+    bands="545"
+    image_path="../../../images/crism_frt00009326_07_sc167-u16be-545x510x640.raw"
+
+    cd .. && make NVCCFLAGS+=-O3 GLOBAL_DEFINES+=-DNO_COMPUTE_LOCAL 
+elif [ $1 = "casi" ]; then
+    rows="1225"
+    columns="406"
+    bands="72"
+    image_path="../../../images/casi_t0477f06-raw-u16be-72x1225x406.raw"
+
+    cd .. && make NVCCFLAGS+=-O3 GLOBAL_DEFINES+=-DNO_COMPUTE_LOCAL GLOBAL_DEFINES+=-DCASI
+else
+    Help
+    exit
+fi
+
+taskset --cpu-list 0 nice -n-20 sudo ./compressor --input $image_path --output compressed.fl --rows $rows --columns $columns --bands $bands --in_format BI --in_depth $bands --dyn_range 16 --word_len 1 --out_format BSQ --out_depth $bands  --pred_bands 0 --reg_size 32 --w_resolution 4 --w_interval 2048 --w_initial -6 --w_final -6   --in_byte_ordering BIG --block_size 64 --ref_interval 1
+

@@ -1,0 +1,35 @@
+#/bin/sh
+
+#usage
+#./validate_all 
+
+################################################################################
+# Help                                                                         #
+################################################################################
+Help()
+{
+    # Display Help
+    echo usage "./validate_all"
+}
+
+
+
+for i in 1 2 17 34
+do
+    ./program_validator crism10 $i
+    read -p "Press to continue"
+done
+
+for i in 1 2 17 34
+do
+    ./program_validator crism09 $i
+    read -p "Press to continue"
+done
+
+for i in 1 3 9
+do
+    ./program_validator casi $i
+    read -p "Press to continue"
+done
+
+

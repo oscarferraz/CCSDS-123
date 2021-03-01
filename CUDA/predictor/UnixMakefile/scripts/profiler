@@ -1,0 +1,138 @@
+#/bin/sh
+
+#usage
+#./program_tester <image_file> <num_streams>
+
+################################################################################
+# Help                                                                         #
+################################################################################
+Help()
+{
+    # Display Help
+    echo usage "./program_tester ["hawaii", "yellowstone", "crism10", "crims09", "casi"] <num_streams>"
+}
+
+################################################################################
+# Process the input options. Add options as needed.                            #
+################################################################################
+# Get the options
+while getopts ":h" option; do
+   case $option in
+        h) # display Help
+            Help
+            exit;;
+        \?) # incorrect option
+            echo "Error: Invalid option"
+            exit;;
+   esac
+done
+
+if [ $# -lt 2 ] || [ $2 -lt 1 ]; then
+    Help
+    exit
+fi
+
+if [ $1 = "hawaii" ]; then
+    rows="512"
+    columns="614"
+    bands="224"
+    thrds_x="2"
+    thrds_y="512"
+    thrds_z="1"
+    image_path="../../../images/aviris_hawaii_f011020t01p03r05_sc01.uncal-u16be-224x512x614.raw"
+
+    if [ $2 -ne 1 ] && [ $2 -ne 2 ] && [ $2 -ne 4 ] && [ $2 -ne 7 ] && [ $2 -ne 14 ] && [ $2 -ne 28 ]; then
+        echo "Number of streams not valid ["1", "2", "4", "7" "14", "28"]"
+        exit
+    fi
+
+    z=$(((bands / 16) / $2))
+    
+elif [ $1 = "yellowstone" ]; then
+    rows="512"
+    columns="680"
+    bands="224"
+    thrds_x="2"
+    thrds_y="512"
+    thrds_z="1"
+    image_path="../../../images/aviris_yellowstone_f060925t01p00r12_sc00.uncal-u16be-224x512x680.raw"
+
+    if [ $2 -ne 1 ] && [ $2 -ne 2 ] && [ $2 -ne 4 ] && [ $2 -ne 7 ] && [ $2 -ne 14 ] && [ $2 -ne 28 ]; then
+        echo "Number of streams not valid ["1", "2", "4", "7" "14", "28"]"
+        exit
+    fi
+
+    z=$(((bands / 8) / $2))
+
+elif [ $1 = "crism10" ]; then
+    rows="510"
+    columns="640"
+    bands="545"
+    thrds_x="2"
+    thrds_y="510"
+    thrds_z="1"
+    image_path="../../../images/crism_frt00010f86_07_sc167-u16be-545x510x640.raw"
+
+    if [ $2 -ne 1 ] && [ $2 -ne 2 ] && [ $2 -ne 17 ] && [ $2 -ne 34 ]; then
+        echo "Number of streams not valid ["1", "2", "17" "34"]"
+        exit
+    fi
+
+    z=$(((bands / 8) / $2))
+elif [ $1 = "crism09" ]; then
+    rows="510"
+    columns="640"
+    bands="545"
+    thrds_x="2"
+    thrds_y="510"
+    thrds_z="1"
+    image_path="../../../images/crism_frt00009326_07_sc167-u16be-545x510x640.raw"
+
+    if [ $2 -ne 1 ] && [ $2 -ne 2 ] && [ $2 -ne 17 ] && [ $2 -ne 34 ]; then
+        echo "Number of streams not valid ["1", "2", "17" "34""
+        exit
+    fi
+
+    z=$(((bands / 8) / $2))
+elif [ $1 = "casi" ]; then
+    rows="406"
+    columns="1225"
+    bands="72"
+    thrds_x="1"
+    thrds_y="406"
+    thrds_z="1"
+    image_path="../../../images/casi_t0477f06-raw-u16be-72x1225x406.raw"
+
+    if [ $2 -ne 1 ] && [ $2 -ne 3 ] && [ $2 -ne 9 ]; then
+        echo "Number of streams not valid ["1", "3", "9"]"
+        exit
+    fi
+
+    z=$(((bands / 8) / $2))
+else
+    Help
+    exit
+fi
+
+if [ $EUID != 0 ]; then
+    sudo "$0" "$@"
+    exit $?
+fi
+
+
+cd .. && make NVCCFLAGS+=-lineinfo NVCCFLAGS+=-O3 GLOBAL_DEFINES+=-DNO_COMPUTE_LOCAL KERNEL_DEFINES+=-Dthrds_x=$thrds_x KERNEL_DEFINES+=-Dthrds_y=$thrds_y KERNEL_DEFINES+=-Dthrds_z=$thrds_z KERNEL_DEFINES+=-DNUM_STREAMS=$z
+
+echo "GPU profiling"
+/usr/local/cuda-10.2/bin/nvprof --log-file profiler_GPU.log ./compressor --input $image_path --output compressed.fl --rows $rows --columns $columns --bands $bands --in_format BI --in_depth $bands --dyn_range 16 --word_len 1 --out_format BSQ --sample_adaptive --u_max 8 --out_depth $bands --y_star 9 --y_0 8 --k 14  --pred_bands 0 --reg_size 32 --w_resolution 4 --w_interval 2048 --w_initial -6 --w_final -6   --in_byte_ordering BIG
+
+echo "GPU metrics profiling"
+/usr/local/cuda-10.2/bin/nvprof --metrics all --log-file profiler_metrics.log ./compressor --input $image_path --output compressed.fl --rows $rows --columns $columns --bands $bands --in_format BI --in_depth $bands --dyn_range 16 --word_len 1 --out_format BSQ --sample_adaptive --u_max 8 --out_depth $bands --y_star 9 --y_0 8 --k 14  --pred_bands 0 --reg_size 32 --w_resolution 4 --w_interval 2048 --w_initial -6 --w_final -6   --in_byte_ordering BIG
+
+echo "GPU events profiling"
+/usr/local/cuda-10.2/bin/nvprof --events all --log-file profiler_events.log ./compressor --input $image_path --output compressed.fl --rows $rows --columns $columns --bands $bands --in_format BI --in_depth $bands --dyn_range 16 --word_len 1 --out_format BSQ --sample_adaptive --u_max 8 --out_depth $bands --y_star 9 --y_0 8 --k 14  --pred_bands 0 --reg_size 32 --w_resolution 4 --w_interval 2048 --w_initial -6 --w_final -6   --in_byte_ordering BIG
+
+#./compressor --input /home/nvidia/Hyperspectral-xavier/images/aviris_hawaii_f011020t01p03r05_sc01.uncal-u16be-224x512x614.raw --output compressed.fl --rows 512 --columns 614 --bands 224 --in_format BI --in_depth 224 --dyn_range 16 --word_len 1 --out_format BSQ --sample_adaptive --u_max 8 --out_depth 224 --y_star 9 --y_0 8 --k 14  --pred_bands 0 --reg_size 32 --w_resolution 4 --w_interval 2048 --w_initial -6 --w_final -6   --in_byte_ordering BIG
+#./compressor --input ../../../images/aviris_yellowstone_f060925t01p00r12_sc00.uncal-u16be-224x512x680.raw --output compressed.fl --rows 512 --columns 680 --bands 224 --in_format BI --in_depth 224 --dyn_range 16 --word_len 1 --out_format BSQ --sample_adaptive --u_max 8 --out_depth 224 --y_star 9 --y_0 8 --k 14  --pred_bands 0 --reg_size 32 --w_resolution 4 --w_interval 2048 --w_initial -6 --w_final -6   --in_byte_ordering BIG
+#./compressor --input ../../../images/crism_frt00010f86_07_sc167-u16be-545x510x640.raw --output compressed.fl --rows 510 --columns 640 --bands 272 --in_format BI --in_depth 272 --dyn_range 16 --word_len 1 --out_format BSQ --sample_adaptive --u_max 8 --out_depth 272 --y_star 9 --y_0 8 --k 14  --pred_bands 0 --reg_size 32 --w_resolution 4 --w_interval 2048 --w_initial -6 --w_final -6   --in_byte_ordering BIG
+#./compressor --input ../../../images/crism_frt00009326_07_sc167-u16be-545x510x640.raw --output compressed.fl --rows 510 --columns 640 --bands 272 --in_format BI --in_depth 272 --dyn_range 16 --word_len 1 --out_format BSQ --sample_adaptive --u_max 8 --out_depth 272 --y_star 9 --y_0 8 --k 14  --pred_bands 0 --reg_size 32 --w_resolution 4 --w_interval 2048 --w_initial -6 --w_final -6   --in_byte_ordering BIG
+#./compressor --input ../../../images/casi_t0477f06-raw-u16be-72x1225x406.raw --output compressed.fl --rows 406 --columns 1225 --bands 72 --in_format BI --in_depth 72 --dyn_range 16 --word_len 1 --out_format BSQ --sample_adaptive --u_max 8 --out_depth 72 --y_star 9 --y_0 8 --k 14  --pred_bands 0 --reg_size 32 --w_resolution 4 --w_interval 2048 --w_initial -6 --w_final -6   --in_byte_ordering BIG

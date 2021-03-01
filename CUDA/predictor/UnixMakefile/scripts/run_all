@@ -1,0 +1,30 @@
+#!/bin/sh
+
+#usage
+#./run_all
+
+for i in 1 3 9
+do
+    ./run casi $i
+done
+
+for i in 1 2 4 7 14 28
+do
+    ./run hawaii $i
+done
+
+for i in 1 2 4 7 14 28
+do
+    ./run yellowstone $i
+done
+
+for i in 1 2 17 34
+do
+    ./run crism10 $i
+done
+
+for i in 1 2 17 34
+do
+    ./run crism09 $i
+done
+
