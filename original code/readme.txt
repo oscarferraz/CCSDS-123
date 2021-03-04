@@ -1,0 +1,1 @@
+This code can be obtained at https://amstel.estec.esa.int/tecedm/misc/ESA_OSS_license.html
