@@ -1,4 +1,4 @@
-# Unlocking the Potential of LDPC Decoders with PiM Acceleration
+# Hyperspectral Parallel Image Compression on Edge GPUs
 
 
 ## Introduction
